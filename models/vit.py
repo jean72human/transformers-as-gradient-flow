@@ -9,6 +9,21 @@ from einops.layers.torch import Rearrange
 def pair(t):
     return t if isinstance(t, tuple) else (t, t)
 
+def adjacency(n):
+    # create the diagonal tensor with all zeros
+    A = torch.zeros(n, n)
+
+    # add increasing values to the upper and lower triangular parts of the matrix
+    for i in range(n):
+        for j in range(i+1, n):
+            A[i][j] = j - i
+            A[j][i] = j - i
+    A = (1/A).fill_diagonal_(0)
+    A = A/A.sum(0)
+
+    return A
+
+
 # classes
 
 class PreNorm(nn.Module):
@@ -71,14 +86,14 @@ class SimpleAttention(nn.Module):
         self.tobewq = nn.Linear(dim,dim)
         self.tobewv = nn.Linear(dim,dim)
 
-        self.scale = dim ** -0.5
-
         self.attend = nn.Softmax(dim = 1)
 
     def forward(self, x):
         wk = self.tobewk.weight.data
         wq = self.tobewq.weight.data
         wv = self.tobewv.weight.data
+
+        self.scale = x.size(1) ** -0.5
 
         key = (x @ wk).mT
         query = x @ wq
@@ -89,28 +104,36 @@ class SimpleAttention(nn.Module):
         return attn @ value
 
 class SimpleAttentionI(nn.Module):
-    def __init__(self,dim):
+    def __init__(self,dim,tau=1):
         super().__init__()
-        self.tobewk = nn.Linear(dim,dim)
-        self.tobewq = nn.Linear(dim,dim)
-        self.tobewv = nn.Linear(dim,dim)
+        self.wk = torch.nn.parameter.Parameter(torch.normal(0,0.1,(dim,dim)))
+        self.wq = torch.nn.parameter.Parameter(torch.normal(0,0.1,(dim,dim)))
 
-        self.scale = dim ** -0.5
+        self.wp = torch.nn.parameter.Parameter(torch.normal(0,0.1,(dim,dim)))
+        
+
+        self.tau = tau
 
         self.attend = nn.Softmax(dim = 1)
 
     def forward(self, x):
-        wk = self.tobewk.weight.data
-        wq = self.tobewq.weight.data
-        wv = self.tobewv.weight.data
 
-        key = (x @ wk).mT
-        query = x @ wq
-        value = x @ wv
+        self.scale = (x.size(1)-1) ** -1 # -0.5
 
-        attn = self.attend(torch.bmm(query,key) * self.scale) - torch.eye(x.size(1), device=value.device)
+        W0 = 0.5*(self.wp+self.wp.T)
+        Wv = - W0@W0.T
 
-        return attn @ value
+        key = (x @  self.wk).mT
+        query = x @  self.wq
+        #value = x @ Wv
+
+        #attn = self.attend(torch.bmm(query,key) * self.scale) - torch.eye(x.size(1), device=Wv.device)
+        #attn = torch.unsqueeze(adjacency(x.size(1)),0).expand(x.size(0),-1,-1).to(value.device)
+        attn = (torch.ones((x.size(1),x.size(1)), device=Wv.device) - torch.eye(x.size(1), device=Wv.device))  * self.scale
+
+        #return self.tau * (attn @ value)
+        #-torch.eye(attn.size(0), device=Wv.device)
+        return self.tau*torch.einsum('kv,nvd -> nkd',attn,torch.einsum('nvd,dk -> nvk',x,Wv))
 
 class SimpleAttentionFT(nn.Module):
     def __init__(self,dim):
@@ -120,14 +143,14 @@ class SimpleAttentionFT(nn.Module):
         self.tobewq = nn.Linear(dim,dim)
         self.tobewv = nn.Linear(dim,dim)
 
-        self.scale = dim ** -0.5
-
         self.attend = nn.Softmax(dim = 1)
         self.wstoch = nn.Softmax(dim = 0)
 
     def forward(self, x):
         wk = self.tobewk.weight.data
         wq = self.tobewq.weight.data
+
+        self.scale = x.size(1) ** -0.5
 
         wv = (self.wstoch(self.tobewv.weight.data)*(1/self.dim)).T
 
@@ -182,6 +205,7 @@ class SimpleTransformerI(nn.Module):
     def __init__(self, dim, depth):
         super().__init__()
         self.depth = depth
+        #self.layers = nn.ModuleList([SimpleAttentionI(dim)]*self.depth)
         self.layers = nn.ModuleList([])
         for _ in range(depth):
             self.layers.append(SimpleAttentionI(dim))
@@ -209,9 +233,9 @@ class ViT(nn.Module):
         patch_height, patch_width = pair(patch_size)
 
         assert image_height % patch_height == 0 and image_width % patch_width == 0, 'Image dimensions must be divisible by the patch size.'
-
-        num_patches = (image_height // patch_height) * (image_width // patch_width)
         patch_dim = channels * patch_height * patch_width
+        num_patches = (image_height // patch_height) * (image_width // patch_width)
+        
         assert pool in {'cls', 'mean'}, 'pool type must be either cls (cls token) or mean (mean pooling)'
 
         self.to_patch_embedding = nn.Sequential(
@@ -261,12 +285,15 @@ class SimpleViT(nn.Module):
         patch_dim = channels * patch_height * patch_width
         assert pool in {'cls', 'mean'}, 'pool type must be either cls (cls token) or mean (mean pooling)'
 
-        self.to_patch_embedding = nn.Sequential(
-            Rearrange('b c (h p1) (w p2) -> b (h w) (p1 p2 c)', p1 = patch_height, p2 = patch_width),
-            nn.LayerNorm(patch_dim),
-            nn.Linear(patch_dim, dim),
-            nn.LayerNorm(dim),
-        )
+        if patch_height==1:
+            self.to_patch_embedding = Rearrange('b c (h p1) (w p2) -> b (h w) (p1 p2 c)', p1 = patch_height, p2 = patch_width)
+        else:
+            self.to_patch_embedding = nn.Sequential(
+                Rearrange('b c (h p1) (w p2) -> b (h w) (p1 p2 c)', p1 = patch_height, p2 = patch_width),
+                nn.LayerNorm(patch_dim),
+                nn.Linear(patch_dim, dim),
+                nn.LayerNorm(dim),
+            )
 
         self.pos_embedding = nn.Parameter(torch.randn(1, num_patches + 1, dim))
         self.cls_token = nn.Parameter(torch.randn(1, 1, dim))
@@ -284,7 +311,7 @@ class SimpleViT(nn.Module):
         b, n, _ = x.shape
 
         cls_tokens = repeat(self.cls_token, '1 1 d -> b 1 d', b = b)
-        x = torch.cat((cls_tokens, x), dim=1)
+        #x = torch.cat((cls_tokens, x), dim=1)
         x += self.pos_embedding[:, :(n + 1)]
         x = self.dropout(x)
 
@@ -307,12 +334,15 @@ class SimpleViTI(nn.Module):
         patch_dim = channels * patch_height * patch_width
         assert pool in {'cls', 'mean'}, 'pool type must be either cls (cls token) or mean (mean pooling)'
 
-        self.to_patch_embedding = nn.Sequential(
-            Rearrange('b c (h p1) (w p2) -> b (h w) (p1 p2 c)', p1 = patch_height, p2 = patch_width),
-            nn.LayerNorm(patch_dim),
-            nn.Linear(patch_dim, dim),
-            nn.LayerNorm(dim),
-        )
+        if patch_height==1:
+            self.to_patch_embedding = Rearrange('b c (h p1) (w p2) -> b (h w) (p1 p2 c)', p1 = patch_height, p2 = patch_width)
+        else:
+            self.to_patch_embedding = nn.Sequential(
+                Rearrange('b c (h p1) (w p2) -> b (h w) (p1 p2 c)', p1 = patch_height, p2 = patch_width),
+                nn.LayerNorm(patch_dim),
+                nn.Linear(patch_dim, dim),
+                nn.LayerNorm(dim),
+            )
 
         self.pos_embedding = nn.Parameter(torch.randn(1, num_patches + 1, dim))
         self.cls_token = nn.Parameter(torch.randn(1, 1, dim))
@@ -330,7 +360,7 @@ class SimpleViTI(nn.Module):
         b, n, _ = x.shape
 
         cls_tokens = repeat(self.cls_token, '1 1 d -> b 1 d', b = b)
-        x = torch.cat((cls_tokens, x), dim=1)
+        #x = torch.cat((cls_tokens, x), dim=1)
         x += self.pos_embedding[:, :(n + 1)]
         x = self.dropout(x)
 
@@ -354,12 +384,15 @@ class SimpleViTFT(nn.Module):
         patch_dim = channels * patch_height * patch_width
         assert pool in {'cls', 'mean'}, 'pool type must be either cls (cls token) or mean (mean pooling)'
 
-        self.to_patch_embedding = nn.Sequential(
-            Rearrange('b c (h p1) (w p2) -> b (h w) (p1 p2 c)', p1 = patch_height, p2 = patch_width),
-            nn.LayerNorm(patch_dim),
-            nn.Linear(patch_dim, dim),
-            nn.LayerNorm(dim),
-        )
+        if patch_height==1:
+            self.to_patch_embedding = Rearrange('b c (h p1) (w p2) -> b (h w) (p1 p2 c)', p1 = patch_height, p2 = patch_width)
+        else:
+            self.to_patch_embedding = nn.Sequential(
+                Rearrange('b c (h p1) (w p2) -> b (h w) (p1 p2 c)', p1 = patch_height, p2 = patch_width),
+                nn.LayerNorm(patch_dim),
+                nn.Linear(patch_dim, dim),
+                nn.LayerNorm(dim),
+            )
 
         self.pos_embedding = nn.Parameter(torch.randn(1, num_patches + 1, dim))
         self.cls_token = nn.Parameter(torch.randn(1, 1, dim))
@@ -377,7 +410,7 @@ class SimpleViTFT(nn.Module):
         b, n, _ = x.shape
 
         cls_tokens = repeat(self.cls_token, '1 1 d -> b 1 d', b = b)
-        x = torch.cat((cls_tokens, x), dim=1)
+        #x = torch.cat((cls_tokens, x), dim=1)
         x += self.pos_embedding[:, :(n + 1)]
         x = self.dropout(x)
 
