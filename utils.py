@@ -3,6 +3,8 @@ import scipy
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+import torch
+
 
 def train(model, train_loader, optimizer, loss_func, epoch, device):
 
@@ -58,7 +60,7 @@ def plot_similarities(sims):
 def get_differences(outputs):
     differences = []
     for k in range(len(outputs)-1):
-        differences.append(np.linalg.norm(outputs[k+1])/np.linalg.norm(outputs[k]))
+        differences.append(np.linalg.norm(outputs[k+1])/(np.linalg.norm(outputs[k])+1e-9))
         
     return differences 
 
