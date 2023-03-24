@@ -30,7 +30,7 @@ def diffusion_stepIFT(F,A,W,tau=0.5):
 
 
 class SimpleTransformer(nn.Module):
-    def __init__(self, input_size, patch_size, depth, dim=1024, heads=9, num_classes=10, sign=0, tau=1, weight_sharing=True, method='A', embed=True, softw=False, norm=True):
+    def __init__(self, input_size, patch_size, depth, dim=1024, heads=9, num_classes=10, sign=0, tau=1, weight_sharing=True, method='A', embed=True, softw=False, norm=True, weight_norm=False):
         super().__init__()
         model_bases = {
             'A':diffusion_step,
@@ -39,6 +39,7 @@ class SimpleTransformer(nn.Module):
             'IFT':diffusion_stepIFT
         }
         self.weight_sharing = weight_sharing
+        self.weight_norm = weight_norm
         self.sign = sign
         self.tau = tau
         self.step = model_bases[method]
@@ -131,6 +132,8 @@ class SimpleTransformer(nn.Module):
                 W = self.sign * W@W.T
             else:
                 W = WV
+            if self.weight_norm:
+                W = W/torch.linalg.norm(W)
             if self.softw: 
                 W = torch.nn.functional.softmax(W, -1) * (1/self.vdim)
             A = self.attend(X,WK,WQ,self.vdim)

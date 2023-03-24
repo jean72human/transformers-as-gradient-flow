@@ -34,15 +34,17 @@ val_loader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
 
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
-for m in ['A','I']:
-    for s in [-1,0,1]:
+for m in ['A']:
+    for s in [0]:
         for ws in [False]:
             model = SimpleTransformer(size, patch_size, depth, 
-                            dim=128, 
+                            dim=64, 
+                            heads=1,
                             num_classes=10, 
                             sign=s, 
                             tau=1, 
                             embed=True,
+                            softw=False,
                             weight_sharing=ws, 
                             method=m,
                             norm=True)
@@ -79,10 +81,10 @@ for m in ['A','I']:
                 train_loss_list.append(train_loss)
                 val_loss_list.append(val_loss)
                 
-                if (epoch+1)%10==0 or epoch==num_epochs or epoch==0:
+                if epoch%5==0 or epoch==num_epochs or epoch==1:
                     print()
                     print(f" Train acc {train_acc:.3f}, Train loss {train_loss:.6f}")
                     print(f" Valid acc {val_acc:.3f}, Val loss {val_loss:.6f}")
 
 
-            torch.save(model.state_dict(),f"model_method_{m}_sign_{s}_ws_{ws}_acc_{round(100*val_acc)}.pth")
+            torch.save(model.state_dict(),f"model_method_{m}_sign_{s}_ws_{ws}_acc_{round(100*val_acc.item())}.pth")
