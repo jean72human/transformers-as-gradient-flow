@@ -28,25 +28,19 @@ def diffusion_stepI(F,A,W,tau=1):
 def diffusion_stepIFT(F,A,W,tau=0.5):
     return tau*torch.bmm(A-torch.eye(A.size(1)),rearrange(F@W, 'b h n d -> b n (h d)', h = heads)) + (1-tau)*rearrange(F, 'b h n d -> b n (h d)')
 
-#def diffusion_stepTV(F,A,W,heads,tau=1):
-#    S = rearrange(torch.sign(-torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads))), 'b n (h d) -> b h n d', h = heads)
-#    return tau*torch.bmm(A.transpose(-2,-1),rearrange(S@W.T, 'b h n d -> b n (h d)', h = heads)) + rearrange(F, 'b h n d -> b n (h d)')
-
 def diffusion_stepTV(F,A,W,heads,tau=1):
-    S = rearrange(torch.tanh(-torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads))), 'b n (h d) -> b h n d', h = heads)
+    S = rearrange(torch.sign(-torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads))), 'b n (h d) -> b h n d', h = heads)
     return tau*torch.bmm(A.transpose(-2,-1),rearrange(S@W.T, 'b h n d -> b n (h d)', h = heads)) + rearrange(F, 'b h n d -> b n (h d)')
 
-def diffusion_stepTVL2(F,A,W,heads,tau=1):
-    S = rearrange(torch.tanh(-torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads))), 'b n (h d) -> b h n d', h = heads)
+def diffusion_stepTVL2(F,A,W,heads,tau=0.5):
+    S = rearrange(torch.sign(-torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads))), 'b n (h d) -> b h n d', h = heads)
     return tau*torch.bmm(A.transpose(-2,-1),rearrange(S@W.T, 'b h n d -> b n (h d)', h = heads)) + (1-tau)*rearrange(F, 'b h n d -> b n (h d)')
 
 def diffusion_stepQL(F,A,W,heads,tau=1):
     G = F@W
-    L = torch.eye(A.size(1), device=A.device) - A
-    term1 = -(L.transpose(-1,-2)+L)
-    term2 = torch.tanh(torch.bmm(torch.bmm(rearrange(G, 'b h n d -> b n (h d)', h = heads).transpose(-1,-2),L),rearrange(G, 'b h n d -> b n (h d)', h = heads)))
-    return rearrange(F, 'b h n d -> b n (h d)') - tau* rearrange(rearrange(torch.bmm(torch.bmm(term1,rearrange(G, 'b h n d -> b n (h d)', h = heads)),term2), 'b n (h d) -> b h n d', h = heads)@W.T, 'b h n d -> b n (h d)')
-
+    L = torch.eye(A.size(1), devuce=A.device) - A
+    term1 = L + L.transpose(-1,-2)
+    term2 = 
 
 class SimpleTransformer(nn.Module):
     def __init__(self, input_size, patch_size, depth, dim=1024, heads=9, num_classes=10, sign=0, tau=1, weight_sharing=True, method='A', embed=True, softw=False, norm=True, weight_norm=False, attn_norm=False):
@@ -57,8 +51,7 @@ class SimpleTransformer(nn.Module):
             'FT':diffusion_stepFT,
             'IFT':diffusion_stepIFT,
             'TV': diffusion_stepTV,
-            'TVL2': diffusion_stepTVL2,
-            'QL': diffusion_stepQL
+            'TVL2': diffusion_stepTVL2
         }
         self.weight_sharing = weight_sharing
         self.weight_norm = weight_norm

@@ -34,14 +34,14 @@ val_loader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
 
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
-# ms = ['A','A','A','FT','FT','FT']
-# ss = [0,-1,1,0,-1,1]
-# wns = [False,False,False,True,True,True]
+# ms = ['TV','TVL2']
+# ss = [0,0]
+# wns = [False,False]
 # ts = [1,1,1,0.5,0.5,0.5]
-ms = ['FT','FT']
-ss = [-1,-1]
-wns = [True,False]
-ts = [0.75,0.75]
+ms = ['TV','TV','TVL2','TVL2']
+ss = [0,0,0,0]
+wns = [False,False,False,False]
+ts = [1,1,0.5,0.5]
 ws = False
 
 for m,s,wn,t in zip(ms,ss,wns,ts):
@@ -56,7 +56,6 @@ for m,s,wn,t in zip(ms,ss,wns,ts):
         weight_sharing=ws, 
         method=m,
         norm=True,
-        attn_norm=True,
         weight_norm=wn
     )
     
@@ -100,4 +99,4 @@ for m,s,wn,t in zip(ms,ss,wns,ts):
             print(f" Valid acc {val_acc:.3f}, Val loss {val_loss:.6f}")
 
 
-    torch.save(model.state_dict(),f"model_method_{m}_sign_{s}_tau_{t}_wn_{wn}_ws_{ws}_attnnorm_acc_{round(100*val_acc.item())}.pth")
+    torch.save(model.state_dict(),f"model_method_{m}_sign_{s}_tau_{t}_wn_{wn}_ws_{ws}_acc_{round(100*val_acc.item())}.pth")
