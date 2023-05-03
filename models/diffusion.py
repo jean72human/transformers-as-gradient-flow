@@ -34,8 +34,9 @@ def diffusion_step(F,A,W,heads,tau=1):
 
 def diffusion_stepD(F,A,W,heads,tau=1):
     X = diffusion_step(F,A,W,heads,tau) 
-    alpha = 2
-    return X - tau*alpha*torch.tanh(alpha*X.sum())#tau*SignFunctionSTE.apply(X.sum())
+    return X - tau*X.sum()
+    #alpha = 2
+    #return X - tau*alpha*torch.tanh(alpha*X.sum())#tau*SignFunctionSTE.apply(X.sum())
 
 def diffusion_stepN(F,A,W,heads,tau=1):
     X = diffusion_step(F,A,W,heads,tau) 
