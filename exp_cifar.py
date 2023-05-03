@@ -38,11 +38,11 @@ classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship'
 # ss = [0,-1,1,0,-1,1]
 # wns = [False,False,False,True,True,True]
 # ts = [1,1,1,0.5,0.5,0.5]
-ms = ['D','D']
-ss = [0,0]
-wns = [False,True]
-ts = [1,1]
-idns = [False,False]
+ms = ['D']
+ss = [0]
+wns = [False]
+ts = [1]
+idns = [False]
 ws = False
 
 for m,s,wn,t,idn in zip(ms,ss,wns,ts,idns):
