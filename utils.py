@@ -97,6 +97,6 @@ def plot_images_full(norm_images):
     
 def generate_matrix(dim,sign=1):
     V = np.diag(sign*np.random.rand(dim))
-    Q = np.random.normal(0,0.3,(dim,dim))
+    Q = np.random.normal(0,0.5,(dim,dim))
     M = Q@V@np.linalg.inv(Q)
     return 0.5*(M+M.T)

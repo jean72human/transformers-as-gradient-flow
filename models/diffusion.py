@@ -14,10 +14,32 @@ class PreNorm(nn.Module):
         self.fn = fn
     def forward(self, x, **kwargs):
         return self.fn(self.norm(x), **kwargs)
+    
+class SignFunctionSTE(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, input):
+        return input.sign()
+
+    @staticmethod
+    def backward(ctx, grad_output):
+        return grad_output.clone()
+    
+class SignSTE(nn.Module):
+    def forward(self, input):
+        return SignFunctionSTE.apply(input)
 
 
 def diffusion_step(F,A,W,heads,tau=1):
     return tau*torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads)) + rearrange(F, 'b h n d -> b n (h d)')
+
+def diffusion_stepD(F,A,W,heads,tau=1):
+    X = diffusion_step(F,A,W,heads,tau) 
+    alpha = 2
+    return X - tau*alpha*torch.tanh(alpha*X.sum())#tau*SignFunctionSTE.apply(X.sum())
+
+def diffusion_stepN(F,A,W,heads,tau=1):
+    X = diffusion_step(F,A,W,heads,tau) 
+    return X * (1+torch.linalg.norm(X))
 
 def diffusion_stepFT(F,A,W,heads,tau=0.5):
     return tau*torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads)) + (1-tau)*rearrange(F, 'b h n d -> b n (h d)')
@@ -49,16 +71,18 @@ def diffusion_stepQL(F,A,W,heads,tau=1):
 
 
 class SimpleTransformer(nn.Module):
-    def __init__(self, input_size, patch_size, depth, dim=1024, heads=9, num_classes=10, sign=0, tau=1, weight_sharing=True, method='A', embed=True, softw=False, norm=True, weight_norm=False, attn_norm=False):
+    def __init__(self, input_size, patch_size, depth, dim=1024, heads=9, num_classes=10, sign=0, tau=1, weight_sharing=True, method='A', embed=True, softw=False, norm=True, weight_norm=False, attn_norm=False, identities=False):
         super().__init__()
         model_bases = {
             'A':diffusion_step,
+            'M':diffusion_step,
             'I':diffusion_stepI,
             'FT':diffusion_stepFT,
             'IFT':diffusion_stepIFT,
             'TV': diffusion_stepTV,
             'TVL2': diffusion_stepTVL2,
-            'QL': diffusion_stepQL
+            'QL': diffusion_stepQL,
+            'D': diffusion_stepD
         }
         self.weight_sharing = weight_sharing
         self.weight_norm = weight_norm
@@ -69,6 +93,7 @@ class SimpleTransformer(nn.Module):
         self.normalize = norm
         self.attn_norm = attn_norm
         self.heads = heads
+        self.identities = identities
         
         C,H,W = input_size
         num_patches = (H // patch_size) * (W // patch_size)
@@ -138,7 +163,12 @@ class SimpleTransformer(nn.Module):
                 W = W/torch.linalg.norm(W)
             if self.softw: 
                 W = torch.nn.functional.softmax(W, -1) * (1/self.vdim)
-            A = self.attend(X,WK,WQ,self.vdim)
+
+            if self.identities == True and step%2==1:
+                A = torch.eye(X.size(-2), device=X.device)
+            else:
+                A = self.attend(X,WK,WQ,self.vdim)
+                
             X = rearrange(X, 'b n (h d) -> b h n d', h = self.heads)
             X = self.step(X,A,W,self.heads,self.tau)
             #X = nn.functional.relu(X)
@@ -168,7 +198,13 @@ class SimpleTransformer(nn.Module):
             if self.softw: 
                 W = torch.nn.functional.softmax(W, -1) * (1/self.vdim)
             Ws.append(W)
-            A = self.attend(X,WK,WQ,self.vdim)
+
+            # compute attentions
+            if self.identities == True and step%2==1:
+                A = torch.eye(X.size(-2), device=X.device)
+            else:
+                A = self.attend(X,WK,WQ,self.vdim)
+
             X = rearrange(X, 'b n (h d) -> b h n d', h = self.heads)
             X = self.step(X,A,W,self.heads,self.tau)
             As.append(A)

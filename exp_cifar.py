@@ -38,13 +38,14 @@ classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship'
 # ss = [0,-1,1,0,-1,1]
 # wns = [False,False,False,True,True,True]
 # ts = [1,1,1,0.5,0.5,0.5]
-ms = ['FT','FT']
-ss = [-1,-1]
-wns = [True,False]
-ts = [0.75,0.75]
+ms = ['D','D']
+ss = [0,0]
+wns = [False,True]
+ts = [1,1]
+idns = [False,False]
 ws = False
 
-for m,s,wn,t in zip(ms,ss,wns,ts):
+for m,s,wn,t,idn in zip(ms,ss,wns,ts,idns):
     model = SimpleTransformer(size, patch_size, depth, 
         dim=128, 
         heads=1,
@@ -56,13 +57,14 @@ for m,s,wn,t in zip(ms,ss,wns,ts):
         weight_sharing=ws, 
         method=m,
         norm=True,
-        attn_norm=True,
-        weight_norm=wn
+        attn_norm=False,
+        weight_norm=wn,
+        identities=idns
     )
     
     model = model.to(device)
 
-    print(f"model_method_{m}_sign_{s}_tau_{t}_wn_{wn}_ws_{ws}")
+    print(f"model_method_{m}_sign_{s}_tau_{t}_wn_{wn}_ws_{ws}_idn_{idn}")
 
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
@@ -100,4 +102,4 @@ for m,s,wn,t in zip(ms,ss,wns,ts):
             print(f" Valid acc {val_acc:.3f}, Val loss {val_loss:.6f}")
 
 
-    torch.save(model.state_dict(),f"model_method_{m}_sign_{s}_tau_{t}_wn_{wn}_ws_{ws}_attnnorm_acc_{round(100*val_acc.item())}.pth")
+    torch.save(model.state_dict(),f"model_method_{m}_sign_{s}_tau_{t}_wn_{wn}_ws_{ws}_idn_{idn}_acc_{round(100*val_acc.item())}.pth")
