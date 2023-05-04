@@ -61,7 +61,7 @@ def diffusion_stepD(F,A,W,heads,tau=1):
 
 def diffusion_stepN(F,A,W,heads,tau=1):
     X = diffusion_step(F,A,W,heads,tau) 
-    return X * (1+torch.linalg.norm(X))
+    return X * (1+torch.linalg.norm(rearrange(F, 'b h n d -> b n (h d)')))
 
 def diffusion_stepFT(F,A,W,heads,tau=0.5):
     return tau*torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads)) + (1-tau)*rearrange(F, 'b h n d -> b n (h d)')
