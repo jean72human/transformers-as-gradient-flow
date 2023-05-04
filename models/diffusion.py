@@ -28,14 +28,36 @@ class SignSTE(nn.Module):
     def forward(self, input):
         return SignFunctionSTE.apply(input)
 
+def tv_subtracted_term(X, lambda_, epsilon, A):
+    """
+    Computes the total variation subtracted term for the Total Variation-Subtracted Dirichlet Energy gradient flow.
+    X: tensor of shape (b, n, d), where b is the batch size, n is the number of nodes, and d is the node representation size
+    lambda_: scalar, regularization parameter
+    epsilon: scalar, smoothing parameter for Moreau-Yosida regularization
+    A: tensor of shape (n, n), adjacency matrix of the graph
+    """
+    b, n, d = X.shape
+    # Moreau-Yosida regularization of X
+    X_epsilon = (X - epsilon * torch.matmul(A, X)) / (1 + epsilon)  # Shape (b, n, d)
+
+    # Compute the gradient of u_epsilon
+    grad_u_epsilon = torch.matmul(A, X_epsilon) - X_epsilon  # Shape (b, n, d)
+
+    # Compute the norm of the gradient
+    norm_grad_u_epsilon = torch.norm(grad_u_epsilon, dim=2, keepdim=True)  # Shape (b, n, 1)
+
+    # Compute the divergence term
+    div_term = torch.matmul(A.transpose(-1,-2), grad_u_epsilon / (norm_grad_u_epsilon + 1e-10))  # Shape (b, n, d)
+
+    return lambda_ * div_term
+
 
 def diffusion_step(F,A,W,heads,tau=1):
     return tau*torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads)) + rearrange(F, 'b h n d -> b n (h d)')
 
 def diffusion_stepD(F,A,W,heads,tau=1):
     X = diffusion_step(F,A,W,heads,tau) 
-    alpha = 2
-    return X - tau*X.mean(0)#tau*SignFunctionSTE.apply(X.sum())
+    return X - tv_subtracted_term(X, tau, 1e-10, torch.ones(A.shape, device=A.device))
 
 def diffusion_stepN(F,A,W,heads,tau=1):
     X = diffusion_step(F,A,W,heads,tau) 
