@@ -15,18 +15,27 @@ class PreNorm(nn.Module):
     def forward(self, x, **kwargs):
         return self.fn(self.norm(x), **kwargs)
     
-class SignFunctionSTE(torch.autograd.Function):
-    @staticmethod
-    def forward(ctx, input):
-        return input.sign()
+def grid(n):
+    A = torch.zeros((n*n, n*n))
+    for i in range(n):
+        for j in range(n):
+            idx = i * n + j  # index of current pixel
+            if i > 0:
+                # connect to top neighbor
+                A[idx, idx - n] = 1
+            if i < n - 1:
+                # connect to bottom neighbor
+                A[idx, idx + n] = 1
+            if j > 0:
+                # connect to left neighbor
+                A[idx, idx - 1] = 1
+            if j < n - 1:
+                # connect to right neighbor
+                A[idx, idx + 1] = 1
 
-    @staticmethod
-    def backward(ctx, grad_output):
-        return grad_output.clone()
-    
-class SignSTE(nn.Module):
-    def forward(self, input):
-        return SignFunctionSTE.apply(input)
+    A = A/A.sum(0)
+    A = A.double()
+    return A
 
 def tv_subtracted_term(X, lambda_, epsilon, A):
     """
@@ -52,59 +61,30 @@ def tv_subtracted_term(X, lambda_, epsilon, A):
     return lambda_ * div_term
 
 
-def diffusion_step(F,A,W,heads,tau=1):
+def diffusion_step(F,A,W,heads,tau=1,**kwargs):
     return tau*torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads)) + rearrange(F, 'b h n d -> b n (h d)')
 
-def diffusion_stepD(F,A,W,heads,tau=1):
+def diffusion_stepD(F,A,W,heads,tau=1,**kwargs):
     X = diffusion_step(F,A,W,heads,tau) 
     return X - tv_subtracted_term(X, tau, 1e-10, torch.ones(A.shape, device=A.device))
 
-def diffusion_stepN(F,A,W,heads,tau=1):
-    X = diffusion_step(F,A,W,heads,tau) 
-    return X * (1+torch.linalg.norm(rearrange(F, 'b h n d -> b n (h d)')))
+def diffusion_stepBS(F,A,W,heads,tau=1,**kwargs):
+    B = torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads))
+    B_flat = kwargs['norm'](B+rearrange(F, 'b h n d -> b n (h d)'))
+    S = torch.einsum('kv,nvd -> nkd',kwargs['grid'],B_flat)
+    return tau*(B-S) + rearrange(F, 'b h n d -> b n (h d)')
 
-def diffusion_stepFT(F,A,W,heads,tau=0.5):
+def diffusion_stepFT(F,A,W,heads,tau=0.5,**kwargs):
     return tau*torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads)) + (1-tau)*rearrange(F, 'b h n d -> b n (h d)')
-
-def diffusion_stepI(F,A,W,tau=1):
-    return tau*torch.bmm(A-torch.eye(A.size(1)),rearrange(F@W, 'b h n d -> b n (h d)', h = heads)) + rearrange(F, 'b h n d -> b n (h d)')
-
-def diffusion_stepIFT(F,A,W,tau=0.5):
-    return tau*torch.bmm(A-torch.eye(A.size(1)),rearrange(F@W, 'b h n d -> b n (h d)', h = heads)) + (1-tau)*rearrange(F, 'b h n d -> b n (h d)')
-
-#def diffusion_stepTV(F,A,W,heads,tau=1):
-#    S = rearrange(torch.sign(-torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads))), 'b n (h d) -> b h n d', h = heads)
-#    return tau*torch.bmm(A.transpose(-2,-1),rearrange(S@W.T, 'b h n d -> b n (h d)', h = heads)) + rearrange(F, 'b h n d -> b n (h d)')
-
-def diffusion_stepTV(F,A,W,heads,tau=1):
-    S = rearrange(torch.tanh(-torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads))), 'b n (h d) -> b h n d', h = heads)
-    return tau*torch.bmm(A.transpose(-2,-1),rearrange(S@W.T, 'b h n d -> b n (h d)', h = heads)) + rearrange(F, 'b h n d -> b n (h d)')
-
-def diffusion_stepTVL2(F,A,W,heads,tau=1):
-    S = rearrange(torch.tanh(-torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads))), 'b n (h d) -> b h n d', h = heads)
-    return tau*torch.bmm(A.transpose(-2,-1),rearrange(S@W.T, 'b h n d -> b n (h d)', h = heads)) + (1-tau)*rearrange(F, 'b h n d -> b n (h d)')
-
-def diffusion_stepQL(F,A,W,heads,tau=1):
-    G = F@W
-    L = torch.eye(A.size(1), device=A.device) - A
-    term1 = -(L.transpose(-1,-2)+L)
-    term2 = torch.tanh(torch.bmm(torch.bmm(rearrange(G, 'b h n d -> b n (h d)', h = heads).transpose(-1,-2),L),rearrange(G, 'b h n d -> b n (h d)', h = heads)))
-    return rearrange(F, 'b h n d -> b n (h d)') - tau* rearrange(rearrange(torch.bmm(torch.bmm(term1,rearrange(G, 'b h n d -> b n (h d)', h = heads)),term2), 'b n (h d) -> b h n d', h = heads)@W.T, 'b h n d -> b n (h d)')
-
 
 class SimpleTransformer(nn.Module):
     def __init__(self, input_size, patch_size, depth, dim=1024, heads=9, num_classes=10, sign=0, tau=1, weight_sharing=True, method='A', embed=True, softw=False, norm=True, weight_norm=False, attn_norm=False, identities=False):
         super().__init__()
         model_bases = {
             'A':diffusion_step,
-            'M':diffusion_step,
-            'I':diffusion_stepI,
             'FT':diffusion_stepFT,
-            'IFT':diffusion_stepIFT,
-            'TV': diffusion_stepTV,
-            'TVL2': diffusion_stepTVL2,
-            'QL': diffusion_stepQL,
-            'D': diffusion_stepD
+            'D':diffusion_stepD,
+            'BS':diffusion_stepBS
         }
         self.weight_sharing = weight_sharing
         self.weight_norm = weight_norm
@@ -121,6 +101,8 @@ class SimpleTransformer(nn.Module):
         num_patches = (H // patch_size) * (W // patch_size)
         
         self.depth = depth
+        
+        self.grid = grid(H // patch_size)
         
         patch_dim = C * patch_size * patch_size
         self.dim = dim*heads
@@ -192,7 +174,7 @@ class SimpleTransformer(nn.Module):
                 A = self.attend(X,WK,WQ,self.vdim)
                 
             X = rearrange(X, 'b n (h d) -> b h n d', h = self.heads)
-            X = self.step(X,A,W,self.heads,self.tau)
+            X = self.step(X,A,W,self.heads,self.tau,norm=self.norms[layer_idx],grid=self.grid)
             #X = nn.functional.relu(X)
 
         pred = self.last_layer(X.mean(dim=1))
@@ -228,7 +210,7 @@ class SimpleTransformer(nn.Module):
                 A = self.attend(X,WK,WQ,self.vdim)
 
             X = rearrange(X, 'b n (h d) -> b h n d', h = self.heads)
-            X = self.step(X,A,W,self.heads,self.tau)
+            X = self.step(X,A,W,self.heads,self.tau,norm=self.norms[layer_idx],grid=self.grid)
             As.append(A)
             outputs.append(X)
             
