@@ -34,7 +34,6 @@ def grid(n):
                 A[idx, idx + 1] = 1
 
     A = A/A.sum(0)
-    A = A.double()
     return A
 
 def tv_subtracted_term(X, lambda_, epsilon, A):
