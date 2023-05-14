@@ -64,8 +64,9 @@ def diffusion_step(F,A,W,heads,tau=1,**kwargs):
     return tau*torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads)) + rearrange(F, 'b h n d -> b n (h d)')
 
 def diffusion_stepD(F,A,W,heads,tau=1,**kwargs):
+    grid = kwargs['grid'].to(A.device)
     X = diffusion_step(F,A,W,heads,tau) 
-    return X - tv_subtracted_term(X, tau, 1e-10, torch.ones(A.shape, device=A.device))
+    return X - tv_subtracted_term(X, tau, 1e-10, grid)
 
 def diffusion_stepBS(F,A,W,heads,tau=1,**kwargs):
     grid = kwargs['grid'].to(A.device)
