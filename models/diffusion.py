@@ -71,6 +71,7 @@ def diffusion_stepD(F,A,W,heads,tau=1,**kwargs):
 def diffusion_stepBS(F,A,W,heads,tau=1,**kwargs):
     B = torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads))
     B_flat = kwargs['norm'](B+rearrange(F, 'b h n d -> b n (h d)'))
+    B_flat = rearrange(B_flat, 'b n (h d) -> b h n d', h = heads)
     S = torch.bmm(A,rearrange(B_flat@W, 'b h n d -> b n (h d)', h = heads))
     return tau*(B-S) + rearrange(F, 'b h n d -> b n (h d)')
 
