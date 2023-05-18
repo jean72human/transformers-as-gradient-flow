@@ -1,0 +1,47 @@
+
+model_method_A_sign_0_tau_1_wn_False_ws_False
+Epoch:   0%|                                                                                                | 0/50 [00:00<?, ?it/s]
+ Train acc 0.259, Train loss 0.015271
+
+
+
+
+Epoch:   8%|███████                                                                                 | 4/50 [04:49<55:18, 72.15s/it]
+ Train acc 0.399, Train loss 0.012695
+
+
+
+
+
+Epoch:  18%|███████████████▊                                                                        | 9/50 [10:50<49:24, 72.30s/it]
+ Train acc 0.452, Train loss 0.011714
+
+
+
+
+
+Epoch:  28%|████████████████████████▎                                                              | 14/50 [16:53<43:33, 72.59s/it]
+ Train acc 0.477, Train loss 0.011166
+
+
+
+
+
+Epoch:  38%|█████████████████████████████████                                                      | 19/50 [22:59<37:48, 73.18s/it]
+ Train acc 0.496, Train loss 0.010799
+
+
+
+
+Epoch:  46%|████████████████████████████████████████                                               | 23/50 [28:55<33:57, 75.46s/it]
+Traceback (most recent call last):
+  File "/home/aengusl/jean72human/transformers-as-gradient-flow/exp_cifar.py", line 91, in <module>
+    train_loss, train_acc = train(model,train_loader,optimizer,criterion,epoch,device)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aengusl/jean72human/transformers-as-gradient-flow/utils.py", line 21, in train
+    loss.backward()
+  File "/home/aengusl/anaconda3/envs/tgf73/lib/python3.11/site-packages/torch/_tensor.py", line 487, in backward
+    torch.autograd.backward(
+  File "/home/aengusl/anaconda3/envs/tgf73/lib/python3.11/site-packages/torch/autograd/__init__.py", line 200, in backward
+    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+KeyboardInterrupt

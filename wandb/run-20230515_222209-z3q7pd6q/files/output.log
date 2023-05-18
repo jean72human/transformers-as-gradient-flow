@@ -1,0 +1,26 @@
+
+model_method_A_sign_0_tau_1_wn_False_ws_False
+Epoch:   0%|                                                                                                | 0/50 [00:10<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/aengusl/jean72human/transformers-as-gradient-flow/exp_cifar.py", line 90, in <module>
+    train_loss, train_acc = train(model,train_loader,optimizer,criterion,epoch,device)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aengusl/jean72human/transformers-as-gradient-flow/utils.py", line 19, in train
+    predictions = model(img)
+                  ^^^^^^^^^^
+  File "/home/aengusl/anaconda3/envs/tgf73/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aengusl/jean72human/transformers-as-gradient-flow/models/diffusion.py", line 158, in forward
+    X = self.norms[layer_idx](X)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aengusl/anaconda3/envs/tgf73/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aengusl/anaconda3/envs/tgf73/lib/python3.11/site-packages/torch/nn/modules/normalization.py", line 190, in forward
+    return F.layer_norm(
+           ^^^^^^^^^^^^^
+  File "/home/aengusl/anaconda3/envs/tgf73/lib/python3.11/site-packages/torch/nn/functional.py", line 2515, in layer_norm
+    return torch.layer_norm(input, normalized_shape, weight, bias, eps, torch.backends.cudnn.enabled)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

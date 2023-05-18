@@ -1,0 +1,11 @@
+
+model_method_A_sign_0_tau_1_wn_False_ws_False
+Epoch:   0%|                                                                                                | 0/50 [01:12<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/aengusl/jean72human/transformers-as-gradient-flow/exp_cifar.py", line 114, in <module>
+    dirichlet_input = [x/(np.linalg.norm(x, ord='fro', axis=(-1,-2))) for x in o_list]
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aengusl/jean72human/transformers-as-gradient-flow/exp_cifar.py", line 114, in <listcomp>
+    dirichlet_input = [x/(np.linalg.norm(x, ord='fro', axis=(-1,-2))) for x in o_list]
+                       ~^^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ValueError: operands could not be broadcast together with shapes (16,256,128) (16,)

@@ -1,0 +1,8 @@
+
+model_method_A_sign_0_tau_1_wn_False_ws_False
+Epoch:   0%|                                                                                                | 0/50 [01:12<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/aengusl/jean72human/transformers-as-gradient-flow/exp_cifar.py", line 112, in <module>
+    o_list, _, _ = model.diffuse(image)
+                                 ^^^^^
+NameError: name 'image' is not defined

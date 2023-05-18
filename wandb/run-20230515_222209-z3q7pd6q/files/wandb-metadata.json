@@ -1,0 +1,125 @@
+{
+    "os": "Linux-5.19.0-40-generic-x86_64-with-glibc2.35",
+    "python": "3.11.3",
+    "heartbeatAt": "2023-05-15T21:22:10.025810",
+    "startedAt": "2023-05-15T21:22:09.532444",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/home/aengusl/jean72human/transformers-as-gradient-flow/exp_cifar.py",
+    "codePath": "exp_cifar.py",
+    "git": {
+        "remote": "https://github.com/jean72human/transformers-as-gradient-flow.git",
+        "commit": "c58799d624bc4912adc137e11a901db0e95e3717"
+    },
+    "email": "aenguslynch@gmail.com",
+    "root": "/home/aengusl/jean72human/transformers-as-gradient-flow",
+    "host": "bigboy",
+    "username": "aengusl",
+    "executable": "/home/aengusl/anaconda3/envs/tgf73/bin/python3",
+    "cpu_count": 8,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 3795.0068125000003,
+        "min": 2200.0,
+        "max": 3800.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3800.0,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3606.761,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3779.951,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3800.0,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3800.0,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3800.0,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 4456.494,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3592.173,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3800.0,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3800.0,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3800.0,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3800.0,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3800.0,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3687.178,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3800.0,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3859.033,
+            "min": 2200.0,
+            "max": 3800.0
+        }
+    ],
+    "disk": {
+        "total": 356.09980392456055,
+        "used": 210.79490661621094
+    },
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3090",
+            "memory_total": 25769803776
+        }
+    ],
+    "memory": {
+        "total": 62.71609115600586
+    }
+}

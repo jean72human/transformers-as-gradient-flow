@@ -1,0 +1,15 @@
+
+model_method_A_sign_0_tau_1_wn_False_ws_False
+Epoch:   0%|                                                                                                | 0/50 [00:00<?, ?it/s]
+ Train acc 0.246, Train loss 0.015348
+
+
+Epoch:   4%|███▍                                                                                  | 2/50 [03:07<1:14:51, 93.57s/it]
+Traceback (most recent call last):
+  File "/home/aengusl/jean72human/transformers-as-gradient-flow/exp_cifar.py", line 91, in <module>
+    train_loss, train_acc = train(model,train_loader,optimizer,criterion,epoch,device)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aengusl/jean72human/transformers-as-gradient-flow/utils.py", line 17, in train
+    img, labels = img.to(device), labels.to(device)
+                  ^^^^^^^^^^^^^^
+KeyboardInterrupt

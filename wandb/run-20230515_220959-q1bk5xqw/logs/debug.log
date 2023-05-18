@@ -1,0 +1,27 @@
+2023-05-15 22:09:59,622 INFO    MainThread:158763 [wandb_setup.py:_flush():76] Current SDK version is 0.15.2
+2023-05-15 22:09:59,622 INFO    MainThread:158763 [wandb_setup.py:_flush():76] Configure stats pid to 158763
+2023-05-15 22:09:59,622 INFO    MainThread:158763 [wandb_setup.py:_flush():76] Loading settings from /home/aengusl/.config/wandb/settings
+2023-05-15 22:09:59,622 INFO    MainThread:158763 [wandb_setup.py:_flush():76] Loading settings from /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/settings
+2023-05-15 22:09:59,622 INFO    MainThread:158763 [wandb_setup.py:_flush():76] Loading settings from environment variables: {'api_key': '***REDACTED***'}
+2023-05-15 22:09:59,622 INFO    MainThread:158763 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2023-05-15 22:09:59,622 INFO    MainThread:158763 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'exp_cifar.py', 'program': '/home/aengusl/jean72human/transformers-as-gradient-flow/exp_cifar.py'}
+2023-05-15 22:09:59,622 INFO    MainThread:158763 [wandb_init.py:_log_setup():507] Logging user logs to /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/logs/debug.log
+2023-05-15 22:09:59,622 INFO    MainThread:158763 [wandb_init.py:_log_setup():508] Logging internal logs to /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/logs/debug-internal.log
+2023-05-15 22:09:59,622 INFO    MainThread:158763 [wandb_init.py:init():547] calling init triggers
+2023-05-15 22:09:59,622 INFO    MainThread:158763 [wandb_init.py:init():554] wandb.init called with sweep_config: {}
+config: {'model': ['A', 'A', 'FT', 'D', 'BS'], 'sign': [0, -1, 0, 0, 0], 'weight norm': False, 'tau': 1}
+2023-05-15 22:09:59,622 INFO    MainThread:158763 [wandb_init.py:init():596] starting backend
+2023-05-15 22:09:59,622 INFO    MainThread:158763 [wandb_init.py:init():600] setting up manager
+2023-05-15 22:09:59,623 INFO    MainThread:158763 [backend.py:_multiprocessing_setup():106] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2023-05-15 22:09:59,624 INFO    MainThread:158763 [wandb_init.py:init():606] backend started and connected
+2023-05-15 22:09:59,624 INFO    MainThread:158763 [wandb_init.py:init():700] updated telemetry
+2023-05-15 22:09:59,626 INFO    MainThread:158763 [wandb_init.py:init():737] communicating run to backend with 60.0 second timeout
+2023-05-15 22:10:00,744 INFO    MainThread:158763 [wandb_run.py:_on_init():2177] communicating current version
+2023-05-15 22:10:00,962 INFO    MainThread:158763 [wandb_run.py:_on_init():2186] got version response 
+2023-05-15 22:10:00,962 INFO    MainThread:158763 [wandb_init.py:init():787] starting run threads in backend
+2023-05-15 22:10:02,394 INFO    MainThread:158763 [wandb_run.py:_console_start():2158] atexit reg
+2023-05-15 22:10:02,394 INFO    MainThread:158763 [wandb_run.py:_redirect():2013] redirect: 3
+2023-05-15 22:10:02,394 INFO    MainThread:158763 [wandb_run.py:_redirect():2078] Wrapping output streams.
+2023-05-15 22:10:02,394 INFO    MainThread:158763 [wandb_run.py:_redirect():2103] Redirects installed.
+2023-05-15 22:10:02,394 INFO    MainThread:158763 [wandb_init.py:init():829] run started, returning control to user process
+2023-05-15 22:11:25,624 WARNING MsgRouterThr:158763 [router.py:message_loop():77] message_loop has been closed

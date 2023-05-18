@@ -63,6 +63,28 @@ def tv_subtracted_term(X, lambda_, epsilon, A):
 def diffusion_step(F,A,W,heads,tau=1,**kwargs):
     return tau*torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads)) + rearrange(F, 'b h n d -> b n (h d)')
 
+def diffusion_stepPME(F,A,W,heads,tau=1,**kwargs):
+    K = 0.1
+
+    LF = torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads)) 
+    # Use the exponential diffusion function
+    g = torch.exp(-torch.pow(nn.functional.relu(LF) / K, 2))
+
+    PM = g*LF
+
+    return tau*PM + rearrange(F, 'b h n d -> b n (h d)')
+
+def diffusion_stepPMR(F,A,W,heads,tau=1,**kwargs):
+    K = 0.1
+
+    LF = torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads)) 
+    # Use the rational diffusion function
+    g = 1 / (1 + torch.pow(nn.functional.relu(LF) / K, 2))
+
+    PM = g*LF
+
+    return tau*PM + rearrange(F, 'b h n d -> b n (h d)')
+
 def diffusion_stepD(F,A,W,heads,tau=1,**kwargs):
     grid = kwargs['grid'].to(A.device)
     X = diffusion_step(F,A,W,heads,tau) 
@@ -79,24 +101,24 @@ def diffusion_stepFT(F,A,W,heads,tau=0.5,**kwargs):
     return tau*torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads)) + (1-tau)*rearrange(F, 'b h n d -> b n (h d)')
 
 class SimpleTransformer(nn.Module):
-    def __init__(self, input_size, patch_size, depth, dim=1024, heads=9, num_classes=10, sign=0, tau=1, weight_sharing=True, method='A', embed=True, softw=False, norm=True, weight_norm=False, attn_norm=False, identities=False):
+    def __init__(self, input_size, patch_size, depth, dim=1024, heads=9, num_classes=10, sign=0, tau=1, weight_sharing=False, method='A', embed=True, norm=True, weight_norm=False, attn_norm=False):
         super().__init__()
         model_bases = {
             'A':diffusion_step,
             'FT':diffusion_stepFT,
             'D':diffusion_stepD,
-            'BS':diffusion_stepBS
+            'BS':diffusion_stepBS,
+            'PME':diffusion_stepPME,
+            'PMR':diffusion_stepPMR
         }
         self.weight_sharing = weight_sharing
         self.weight_norm = weight_norm
         self.sign = sign
         self.tau = tau
         self.step = model_bases[method]
-        self.softw = softw
         self.normalize = norm
         self.attn_norm = attn_norm
         self.heads = heads
-        self.identities = identities
         
         C,H,W = input_size
         num_patches = (H // patch_size) * (W // patch_size)
@@ -166,17 +188,11 @@ class SimpleTransformer(nn.Module):
                 W = WV
             if self.weight_norm:
                 W = W/torch.linalg.norm(W)
-            if self.softw: 
-                W = torch.nn.functional.softmax(W, -1) * (1/self.vdim)
 
-            if self.identities == True and step%2==1:
-                A = torch.eye(X.size(-2), device=X.device)
-            else:
-                A = self.attend(X,WK,WQ,self.vdim)
+            A = self.attend(X,WK,WQ,self.vdim)
                 
             X = rearrange(X, 'b n (h d) -> b h n d', h = self.heads)
             X = self.step(X,A,W,self.heads,self.tau,norm=self.norms[layer_idx],grid=self.grid)
-            #X = nn.functional.relu(X)
 
         pred = self.last_layer(X.mean(dim=1))
         return pred
@@ -200,15 +216,9 @@ class SimpleTransformer(nn.Module):
                 W = WV
             if self.weight_norm:
                 W = W/torch.linalg.norm(W)
-            if self.softw: 
-                W = torch.nn.functional.softmax(W, -1) * (1/self.vdim)
             Ws.append(W)
 
-            # compute attentions
-            if self.identities == True and step%2==1:
-                A = torch.eye(X.size(-2), device=X.device)
-            else:
-                A = self.attend(X,WK,WQ,self.vdim)
+            A = self.attend(X,WK,WQ,self.vdim)
 
             X = rearrange(X, 'b n (h d) -> b h n d', h = self.heads)
             X = self.step(X,A,W,self.heads,self.tau,norm=self.norms[layer_idx],grid=self.grid)

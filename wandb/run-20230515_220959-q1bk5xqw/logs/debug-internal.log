@@ -1,0 +1,207 @@
+2023-05-15 22:09:59,624 INFO    StreamThr :158815 [internal.py:wandb_internal():86] W&B internal server running at pid: 158815, started at: 2023-05-15 22:09:59.624473
+2023-05-15 22:09:59,625 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status
+2023-05-15 22:09:59,626 INFO    WriterThread:158815 [datastore.py:open_for_write():85] open: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/run-q1bk5xqw.wandb
+2023-05-15 22:09:59,626 DEBUG   SenderThread:158815 [sender.py:send():375] send: header
+2023-05-15 22:09:59,627 DEBUG   SenderThread:158815 [sender.py:send():375] send: run
+2023-05-15 22:10:00,742 INFO    SenderThread:158815 [dir_watcher.py:__init__():219] watching files in: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files
+2023-05-15 22:10:00,743 INFO    SenderThread:158815 [sender.py:_start_run_threads():1124] run started: q1bk5xqw with start time 1684184999.624152
+2023-05-15 22:10:00,743 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: summary_record
+2023-05-15 22:10:00,743 INFO    SenderThread:158815 [sender.py:_save_file():1378] saving file wandb-summary.json with policy end
+2023-05-15 22:10:00,744 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: check_version
+2023-05-15 22:10:00,744 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: check_version
+2023-05-15 22:10:00,965 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: run_start
+2023-05-15 22:10:00,973 DEBUG   HandlerThread:158815 [system_info.py:__init__():31] System info init
+2023-05-15 22:10:00,973 DEBUG   HandlerThread:158815 [system_info.py:__init__():46] System info init done
+2023-05-15 22:10:00,973 INFO    HandlerThread:158815 [system_monitor.py:start():181] Starting system monitor
+2023-05-15 22:10:00,973 INFO    SystemMonitor:158815 [system_monitor.py:_start():145] Starting system asset monitoring threads
+2023-05-15 22:10:00,973 INFO    HandlerThread:158815 [system_monitor.py:probe():201] Collecting system info
+2023-05-15 22:10:00,974 INFO    SystemMonitor:158815 [interfaces.py:start():190] Started cpu monitoring
+2023-05-15 22:10:00,974 INFO    SystemMonitor:158815 [interfaces.py:start():190] Started disk monitoring
+2023-05-15 22:10:00,974 INFO    SystemMonitor:158815 [interfaces.py:start():190] Started gpu monitoring
+2023-05-15 22:10:00,975 INFO    SystemMonitor:158815 [interfaces.py:start():190] Started memory monitoring
+2023-05-15 22:10:00,975 INFO    SystemMonitor:158815 [interfaces.py:start():190] Started network monitoring
+2023-05-15 22:10:00,987 DEBUG   HandlerThread:158815 [system_info.py:probe():195] Probing system
+2023-05-15 22:10:00,987 DEBUG   HandlerThread:158815 [system_info.py:_probe_git():180] Probing git
+2023-05-15 22:10:00,990 DEBUG   HandlerThread:158815 [system_info.py:_probe_git():188] Probing git done
+2023-05-15 22:10:00,990 DEBUG   HandlerThread:158815 [system_info.py:probe():240] Probing system done
+2023-05-15 22:10:00,990 DEBUG   HandlerThread:158815 [system_monitor.py:probe():210] {'os': 'Linux-5.19.0-40-generic-x86_64-with-glibc2.35', 'python': '3.11.3', 'heartbeatAt': '2023-05-15T21:10:00.987101', 'startedAt': '2023-05-15T21:09:59.621703', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '/home/aengusl/jean72human/transformers-as-gradient-flow/exp_cifar.py', 'codePath': 'exp_cifar.py', 'git': {'remote': 'https://github.com/jean72human/transformers-as-gradient-flow.git', 'commit': 'c58799d624bc4912adc137e11a901db0e95e3717'}, 'email': 'aenguslynch@gmail.com', 'root': '/home/aengusl/jean72human/transformers-as-gradient-flow', 'host': 'bigboy', 'username': 'aengusl', 'executable': '/home/aengusl/anaconda3/envs/tgf73/bin/python3', 'cpu_count': 8, 'cpu_count_logical': 16, 'cpu_freq': {'current': 3897.9168124999997, 'min': 2200.0, 'max': 3800.0}, 'cpu_freq_per_core': [{'current': 3871.351, 'min': 2200.0, 'max': 3800.0}, {'current': 3800.0, 'min': 2200.0, 'max': 3800.0}, {'current': 3870.69, 'min': 2200.0, 'max': 3800.0}, {'current': 3800.0, 'min': 2200.0, 'max': 3800.0}, {'current': 3800.0, 'min': 2200.0, 'max': 3800.0}, {'current': 3800.0, 'min': 2200.0, 'max': 3800.0}, {'current': 3875.854, 'min': 2200.0, 'max': 3800.0}, {'current': 3877.977, 'min': 2200.0, 'max': 3800.0}, {'current': 3862.263, 'min': 2200.0, 'max': 3800.0}, {'current': 3800.0, 'min': 2200.0, 'max': 3800.0}, {'current': 3800.0, 'min': 2200.0, 'max': 3800.0}, {'current': 3855.354, 'min': 2200.0, 'max': 3800.0}, {'current': 3872.333, 'min': 2200.0, 'max': 3800.0}, {'current': 4842.874, 'min': 2200.0, 'max': 3800.0}, {'current': 3837.973, 'min': 2200.0, 'max': 3800.0}, {'current': 3800.0, 'min': 2200.0, 'max': 3800.0}], 'disk': {'total': 356.09980392456055, 'used': 210.79461288452148}, 'gpu': 'NVIDIA GeForce RTX 3090', 'gpu_count': 1, 'gpu_devices': [{'name': 'NVIDIA GeForce RTX 3090', 'memory_total': 25769803776}], 'memory': {'total': 62.71609115600586}}
+2023-05-15 22:10:00,990 INFO    HandlerThread:158815 [system_monitor.py:probe():211] Finished collecting system info
+2023-05-15 22:10:00,990 INFO    HandlerThread:158815 [system_monitor.py:probe():214] Publishing system info
+2023-05-15 22:10:00,990 DEBUG   HandlerThread:158815 [system_info.py:_save_pip():51] Saving list of pip packages installed into the current environment
+2023-05-15 22:10:00,990 DEBUG   HandlerThread:158815 [system_info.py:_save_pip():67] Saving pip packages done
+2023-05-15 22:10:00,990 DEBUG   HandlerThread:158815 [system_info.py:_save_conda():74] Saving list of conda packages installed into the current environment
+2023-05-15 22:10:01,744 INFO    Thread-12 :158815 [dir_watcher.py:_on_file_created():278] file/dir created: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/wandb-summary.json
+2023-05-15 22:10:01,744 INFO    Thread-12 :158815 [dir_watcher.py:_on_file_created():278] file/dir created: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/conda-environment.yaml
+2023-05-15 22:10:01,744 INFO    Thread-12 :158815 [dir_watcher.py:_on_file_created():278] file/dir created: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/requirements.txt
+2023-05-15 22:10:02,390 DEBUG   HandlerThread:158815 [system_info.py:_save_conda():86] Saving conda packages done
+2023-05-15 22:10:02,390 INFO    HandlerThread:158815 [system_monitor.py:probe():216] Finished publishing system info
+2023-05-15 22:10:02,392 DEBUG   SenderThread:158815 [sender.py:send():375] send: files
+2023-05-15 22:10:02,392 INFO    SenderThread:158815 [sender.py:_save_file():1378] saving file wandb-metadata.json with policy now
+2023-05-15 22:10:02,394 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: stop_status
+2023-05-15 22:10:02,394 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: stop_status
+2023-05-15 22:10:02,739 DEBUG   SenderThread:158815 [sender.py:send():375] send: telemetry
+2023-05-15 22:10:02,744 INFO    Thread-12 :158815 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/conda-environment.yaml
+2023-05-15 22:10:02,744 INFO    Thread-12 :158815 [dir_watcher.py:_on_file_created():278] file/dir created: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/wandb-metadata.json
+2023-05-15 22:10:02,744 INFO    Thread-12 :158815 [dir_watcher.py:_on_file_created():278] file/dir created: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/output.log
+2023-05-15 22:10:02,950 INFO    wandb-upload_0:158815 [upload_job.py:push():137] Uploaded file /tmp/tmp3nt5bjw8wandb/9dpbi8n4-wandb-metadata.json
+2023-05-15 22:10:04,740 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status_report
+2023-05-15 22:10:04,744 INFO    Thread-12 :158815 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/output.log
+2023-05-15 22:10:09,742 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status_report
+2023-05-15 22:10:14,742 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status_report
+2023-05-15 22:10:17,394 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: stop_status
+2023-05-15 22:10:17,394 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: stop_status
+2023-05-15 22:10:20,511 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status_report
+2023-05-15 22:10:25,512 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status_report
+2023-05-15 22:10:30,514 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status_report
+2023-05-15 22:10:30,749 INFO    Thread-12 :158815 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/config.yaml
+2023-05-15 22:10:32,394 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: stop_status
+2023-05-15 22:10:32,394 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: stop_status
+2023-05-15 22:10:36,516 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status_report
+2023-05-15 22:10:41,517 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status_report
+2023-05-15 22:10:46,517 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status_report
+2023-05-15 22:10:47,394 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: stop_status
+2023-05-15 22:10:47,395 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: stop_status
+2023-05-15 22:10:51,563 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status_report
+2023-05-15 22:10:56,563 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status_report
+2023-05-15 22:11:00,975 DEBUG   SystemMonitor:158815 [system_monitor.py:_start():159] Starting system metrics aggregation loop
+2023-05-15 22:11:00,975 DEBUG   SenderThread:158815 [sender.py:send():375] send: stats
+2023-05-15 22:11:01,976 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status_report
+2023-05-15 22:11:02,394 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: stop_status
+2023-05-15 22:11:02,395 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: stop_status
+2023-05-15 22:11:07,608 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status_report
+2023-05-15 22:11:12,608 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status_report
+2023-05-15 22:11:15,072 DEBUG   SenderThread:158815 [sender.py:send():375] send: exit
+2023-05-15 22:11:15,072 INFO    SenderThread:158815 [sender.py:send_exit():598] handling exit code: 1
+2023-05-15 22:11:15,072 INFO    SenderThread:158815 [sender.py:send_exit():600] handling runtime: 74
+2023-05-15 22:11:15,073 INFO    SenderThread:158815 [sender.py:_save_file():1378] saving file wandb-summary.json with policy end
+2023-05-15 22:11:15,073 INFO    SenderThread:158815 [sender.py:send_exit():606] send defer
+2023-05-15 22:11:15,073 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: defer
+2023-05-15 22:11:15,073 INFO    HandlerThread:158815 [handler.py:handle_request_defer():170] handle defer: 0
+2023-05-15 22:11:15,073 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: defer
+2023-05-15 22:11:15,073 INFO    SenderThread:158815 [sender.py:send_request_defer():622] handle sender defer: 0
+2023-05-15 22:11:15,073 INFO    SenderThread:158815 [sender.py:transition_state():626] send defer: 1
+2023-05-15 22:11:15,073 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: defer
+2023-05-15 22:11:15,073 INFO    HandlerThread:158815 [handler.py:handle_request_defer():170] handle defer: 1
+2023-05-15 22:11:15,073 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: defer
+2023-05-15 22:11:15,073 INFO    SenderThread:158815 [sender.py:send_request_defer():622] handle sender defer: 1
+2023-05-15 22:11:15,073 INFO    SenderThread:158815 [sender.py:transition_state():626] send defer: 2
+2023-05-15 22:11:15,073 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: defer
+2023-05-15 22:11:15,073 INFO    HandlerThread:158815 [handler.py:handle_request_defer():170] handle defer: 2
+2023-05-15 22:11:15,073 INFO    HandlerThread:158815 [system_monitor.py:finish():190] Stopping system monitor
+2023-05-15 22:11:15,073 DEBUG   SystemMonitor:158815 [system_monitor.py:_start():166] Finished system metrics aggregation loop
+2023-05-15 22:11:15,074 DEBUG   SystemMonitor:158815 [system_monitor.py:_start():170] Publishing last batch of metrics
+2023-05-15 22:11:15,074 INFO    HandlerThread:158815 [interfaces.py:finish():202] Joined cpu monitor
+2023-05-15 22:11:15,074 INFO    HandlerThread:158815 [interfaces.py:finish():202] Joined disk monitor
+2023-05-15 22:11:15,091 INFO    HandlerThread:158815 [interfaces.py:finish():202] Joined gpu monitor
+2023-05-15 22:11:15,091 INFO    HandlerThread:158815 [interfaces.py:finish():202] Joined memory monitor
+2023-05-15 22:11:15,092 INFO    HandlerThread:158815 [interfaces.py:finish():202] Joined network monitor
+2023-05-15 22:11:15,092 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: defer
+2023-05-15 22:11:15,092 INFO    SenderThread:158815 [sender.py:send_request_defer():622] handle sender defer: 2
+2023-05-15 22:11:15,092 INFO    SenderThread:158815 [sender.py:transition_state():626] send defer: 3
+2023-05-15 22:11:15,092 DEBUG   SenderThread:158815 [sender.py:send():375] send: stats
+2023-05-15 22:11:15,092 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: defer
+2023-05-15 22:11:15,092 INFO    HandlerThread:158815 [handler.py:handle_request_defer():170] handle defer: 3
+2023-05-15 22:11:15,092 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: defer
+2023-05-15 22:11:15,092 INFO    SenderThread:158815 [sender.py:send_request_defer():622] handle sender defer: 3
+2023-05-15 22:11:15,092 INFO    SenderThread:158815 [sender.py:transition_state():626] send defer: 4
+2023-05-15 22:11:15,092 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: defer
+2023-05-15 22:11:15,092 INFO    HandlerThread:158815 [handler.py:handle_request_defer():170] handle defer: 4
+2023-05-15 22:11:15,092 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: defer
+2023-05-15 22:11:15,092 INFO    SenderThread:158815 [sender.py:send_request_defer():622] handle sender defer: 4
+2023-05-15 22:11:15,092 INFO    SenderThread:158815 [sender.py:transition_state():626] send defer: 5
+2023-05-15 22:11:15,092 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: defer
+2023-05-15 22:11:15,092 INFO    HandlerThread:158815 [handler.py:handle_request_defer():170] handle defer: 5
+2023-05-15 22:11:15,092 DEBUG   SenderThread:158815 [sender.py:send():375] send: summary
+2023-05-15 22:11:15,092 INFO    SenderThread:158815 [sender.py:_save_file():1378] saving file wandb-summary.json with policy end
+2023-05-15 22:11:15,093 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: defer
+2023-05-15 22:11:15,093 INFO    SenderThread:158815 [sender.py:send_request_defer():622] handle sender defer: 5
+2023-05-15 22:11:15,093 INFO    SenderThread:158815 [sender.py:transition_state():626] send defer: 6
+2023-05-15 22:11:15,093 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: defer
+2023-05-15 22:11:15,093 INFO    HandlerThread:158815 [handler.py:handle_request_defer():170] handle defer: 6
+2023-05-15 22:11:15,093 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: defer
+2023-05-15 22:11:15,093 INFO    SenderThread:158815 [sender.py:send_request_defer():622] handle sender defer: 6
+2023-05-15 22:11:15,093 INFO    SenderThread:158815 [sender.py:transition_state():626] send defer: 7
+2023-05-15 22:11:15,093 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status_report
+2023-05-15 22:11:15,093 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: defer
+2023-05-15 22:11:15,093 INFO    HandlerThread:158815 [handler.py:handle_request_defer():170] handle defer: 7
+2023-05-15 22:11:15,093 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: defer
+2023-05-15 22:11:15,093 INFO    SenderThread:158815 [sender.py:send_request_defer():622] handle sender defer: 7
+2023-05-15 22:11:15,756 INFO    Thread-12 :158815 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/wandb-summary.json
+2023-05-15 22:11:16,072 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: poll_exit
+2023-05-15 22:11:16,752 INFO    SenderThread:158815 [sender.py:transition_state():626] send defer: 8
+2023-05-15 22:11:16,752 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: poll_exit
+2023-05-15 22:11:16,752 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: defer
+2023-05-15 22:11:16,752 INFO    HandlerThread:158815 [handler.py:handle_request_defer():170] handle defer: 8
+2023-05-15 22:11:16,753 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: defer
+2023-05-15 22:11:16,753 INFO    SenderThread:158815 [sender.py:send_request_defer():622] handle sender defer: 8
+2023-05-15 22:11:16,756 INFO    Thread-12 :158815 [dir_watcher.py:_on_file_modified():295] file/dir modified: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/output.log
+2023-05-15 22:11:16,759 INFO    SenderThread:158815 [sender.py:transition_state():626] send defer: 9
+2023-05-15 22:11:16,759 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: defer
+2023-05-15 22:11:16,759 DEBUG   SenderThread:158815 [sender.py:send():375] send: artifact
+2023-05-15 22:11:16,759 INFO    HandlerThread:158815 [handler.py:handle_request_defer():170] handle defer: 9
+2023-05-15 22:11:17,072 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: poll_exit
+2023-05-15 22:11:20,602 INFO    wandb-upload_1:158815 [upload_job.py:push():95] Uploaded file /home/aengusl/.local/share/wandb/artifacts/staging/tmp6c5q894w
+2023-05-15 22:11:20,639 INFO    wandb-upload_0:158815 [upload_job.py:push():95] Uploaded file /home/aengusl/.local/share/wandb/artifacts/staging/tmpv5vzyr61
+2023-05-15 22:11:22,073 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: keepalive
+2023-05-15 22:11:22,156 INFO    SenderThread:158815 [sender.py:send_artifact():1474] sent artifact job-https___github.com_jean72human_transformers-as-gradient-flow.git_exp_cifar.py - {'id': 'QXJ0aWZhY3Q6NDU2MTQ4NjU2', 'digest': '2a125329df1fe8a75f6341318e1a009d', 'state': 'PENDING', 'aliases': [], 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjY5NTc4ODY1', 'latestArtifact': None}, 'version': 'latest'}
+2023-05-15 22:11:22,156 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: defer
+2023-05-15 22:11:22,156 INFO    SenderThread:158815 [sender.py:send_request_defer():622] handle sender defer: 9
+2023-05-15 22:11:22,156 INFO    SenderThread:158815 [dir_watcher.py:finish():365] shutting down directory watcher
+2023-05-15 22:11:22,156 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: status_report
+2023-05-15 22:11:22,757 INFO    SenderThread:158815 [dir_watcher.py:finish():395] scan: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files
+2023-05-15 22:11:22,757 INFO    SenderThread:158815 [dir_watcher.py:finish():409] scan save: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/requirements.txt requirements.txt
+2023-05-15 22:11:22,757 INFO    SenderThread:158815 [dir_watcher.py:finish():409] scan save: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/wandb-metadata.json wandb-metadata.json
+2023-05-15 22:11:22,757 INFO    SenderThread:158815 [dir_watcher.py:finish():409] scan save: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/conda-environment.yaml conda-environment.yaml
+2023-05-15 22:11:22,757 INFO    SenderThread:158815 [dir_watcher.py:finish():409] scan save: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/output.log output.log
+2023-05-15 22:11:22,757 INFO    SenderThread:158815 [dir_watcher.py:finish():409] scan save: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/wandb-summary.json wandb-summary.json
+2023-05-15 22:11:22,759 INFO    SenderThread:158815 [dir_watcher.py:finish():409] scan save: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/config.yaml config.yaml
+2023-05-15 22:11:22,760 INFO    SenderThread:158815 [sender.py:transition_state():626] send defer: 10
+2023-05-15 22:11:22,760 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: poll_exit
+2023-05-15 22:11:22,760 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: defer
+2023-05-15 22:11:22,760 INFO    HandlerThread:158815 [handler.py:handle_request_defer():170] handle defer: 10
+2023-05-15 22:11:22,763 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: defer
+2023-05-15 22:11:22,764 INFO    SenderThread:158815 [sender.py:send_request_defer():622] handle sender defer: 10
+2023-05-15 22:11:22,764 INFO    SenderThread:158815 [file_pusher.py:finish():167] shutting down file pusher
+2023-05-15 22:11:23,252 INFO    wandb-upload_2:158815 [upload_job.py:push():137] Uploaded file /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/output.log
+2023-05-15 22:11:23,257 INFO    wandb-upload_0:158815 [upload_job.py:push():137] Uploaded file /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/conda-environment.yaml
+2023-05-15 22:11:23,283 INFO    wandb-upload_4:158815 [upload_job.py:push():137] Uploaded file /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/config.yaml
+2023-05-15 22:11:23,285 INFO    wandb-upload_3:158815 [upload_job.py:push():137] Uploaded file /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/wandb-summary.json
+2023-05-15 22:11:23,523 INFO    wandb-upload_1:158815 [upload_job.py:push():137] Uploaded file /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/files/requirements.txt
+2023-05-15 22:11:23,723 INFO    Thread-11 (_thread_body):158815 [sender.py:transition_state():626] send defer: 11
+2023-05-15 22:11:23,723 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: defer
+2023-05-15 22:11:23,723 INFO    HandlerThread:158815 [handler.py:handle_request_defer():170] handle defer: 11
+2023-05-15 22:11:23,724 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: defer
+2023-05-15 22:11:23,724 INFO    SenderThread:158815 [sender.py:send_request_defer():622] handle sender defer: 11
+2023-05-15 22:11:23,724 INFO    SenderThread:158815 [file_pusher.py:join():172] waiting for file pusher
+2023-05-15 22:11:23,724 INFO    SenderThread:158815 [sender.py:transition_state():626] send defer: 12
+2023-05-15 22:11:23,724 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: defer
+2023-05-15 22:11:23,724 INFO    HandlerThread:158815 [handler.py:handle_request_defer():170] handle defer: 12
+2023-05-15 22:11:23,724 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: defer
+2023-05-15 22:11:23,724 INFO    SenderThread:158815 [sender.py:send_request_defer():622] handle sender defer: 12
+2023-05-15 22:11:24,437 INFO    SenderThread:158815 [sender.py:transition_state():626] send defer: 13
+2023-05-15 22:11:24,437 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: defer
+2023-05-15 22:11:24,437 INFO    HandlerThread:158815 [handler.py:handle_request_defer():170] handle defer: 13
+2023-05-15 22:11:24,437 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: defer
+2023-05-15 22:11:24,437 INFO    SenderThread:158815 [sender.py:send_request_defer():622] handle sender defer: 13
+2023-05-15 22:11:24,437 INFO    SenderThread:158815 [sender.py:transition_state():626] send defer: 14
+2023-05-15 22:11:24,437 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: defer
+2023-05-15 22:11:24,437 INFO    HandlerThread:158815 [handler.py:handle_request_defer():170] handle defer: 14
+2023-05-15 22:11:24,437 DEBUG   SenderThread:158815 [sender.py:send():375] send: final
+2023-05-15 22:11:24,438 DEBUG   SenderThread:158815 [sender.py:send():375] send: footer
+2023-05-15 22:11:24,438 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: defer
+2023-05-15 22:11:24,438 INFO    SenderThread:158815 [sender.py:send_request_defer():622] handle sender defer: 14
+2023-05-15 22:11:24,438 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: poll_exit
+2023-05-15 22:11:24,438 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: poll_exit
+2023-05-15 22:11:24,438 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: server_info
+2023-05-15 22:11:24,438 DEBUG   SenderThread:158815 [sender.py:send_request():402] send_request: server_info
+2023-05-15 22:11:24,439 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: get_summary
+2023-05-15 22:11:24,439 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: sampled_history
+2023-05-15 22:11:24,551 INFO    MainThread:158815 [wandb_run.py:_footer_history_summary_info():3469] rendering history
+2023-05-15 22:11:24,552 INFO    MainThread:158815 [wandb_run.py:_footer_history_summary_info():3501] rendering summary
+2023-05-15 22:11:24,552 INFO    MainThread:158815 [wandb_run.py:_footer_sync_info():3428] logging synced files
+2023-05-15 22:11:24,552 DEBUG   HandlerThread:158815 [handler.py:handle_request():144] handle_request: shutdown
+2023-05-15 22:11:24,552 INFO    HandlerThread:158815 [handler.py:finish():845] shutting down handler
+2023-05-15 22:11:25,438 INFO    WriterThread:158815 [datastore.py:close():298] close: /home/aengusl/jean72human/transformers-as-gradient-flow/wandb/run-20230515_220959-q1bk5xqw/run-q1bk5xqw.wandb
+2023-05-15 22:11:25,551 INFO    SenderThread:158815 [sender.py:finish():1550] shutting down sender
+2023-05-15 22:11:25,552 INFO    SenderThread:158815 [file_pusher.py:finish():167] shutting down file pusher
+2023-05-15 22:11:25,552 INFO    SenderThread:158815 [file_pusher.py:join():172] waiting for file pusher

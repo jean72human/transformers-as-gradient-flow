@@ -1,0 +1,25 @@
+
+model_method_A_sign_0_tau_1_wn_False_ws_False
+Epoch:   0%|                                                                                                | 0/50 [00:00<?, ?it/s]
+ Train acc 0.246, Train loss 0.015303
+
+Epoch:   2%|█▋                                                                                   | 1/50 [02:15<1:50:32, 135.35s/it]
+Traceback (most recent call last):
+  File "/home/aengusl/jean72human/transformers-as-gradient-flow/exp_cifar.py", line 91, in <module>
+    train_loss, train_acc = train(model,train_loader,optimizer,criterion,epoch,device)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aengusl/jean72human/transformers-as-gradient-flow/utils.py", line 19, in train
+    predictions = model(img)
+                  ^^^^^^^^^^
+  File "/home/aengusl/anaconda3/envs/tgf73/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aengusl/jean72human/transformers-as-gradient-flow/models/diffusion.py", line 155, in forward
+    X = nn.functional.dropout(X,0.1)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aengusl/anaconda3/envs/tgf73/lib/python3.11/site-packages/torch/nn/functional.py", line 1252, in dropout
+    return _VF.dropout_(input, p, training) if inplace else _VF.dropout(input, p, training)
+                                                            ^^^^^^^^^^^
+  File "/home/aengusl/anaconda3/envs/tgf73/lib/python3.11/site-packages/torch/_VF.py", line 26, in __getattr__
+    def __getattr__(self, attr):
+KeyboardInterrupt
