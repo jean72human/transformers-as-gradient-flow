@@ -39,12 +39,6 @@ val_loader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
 
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
-# ms = ['A','A','FT','D','BS']
-# ss = [0,-1,0,0,0]
-# wns = [False,False,False,False,False]
-# ts = [1,1,0.5,1,1]
-# ws = False
-
 ms = ['PME','PMR']
 ss = [0,0]
 wns = [False,False]

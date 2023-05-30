@@ -77,11 +77,11 @@ def diffusion_stepPME(F,A,W,heads,tau=1,**kwargs):
 def diffusion_stepPMR(F,A,W,heads,tau=1,**kwargs):
     K = 0.1
 
-    LF = torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads)) 
+    grad = torch.bmm(A,rearrange(F@W, 'b h n d -> b n (h d)', h = heads)) 
     # Use the rational diffusion function
-    g = 1 / (1 + torch.pow(nn.functional.relu(LF) / K, 2))
+    g = 1 - torch.pow(nn.functional.relu(grad) / K, 2)
 
-    PM = g*LF
+    PM = g*grad
 
     return tau*PM + rearrange(F, 'b h n d -> b n (h d)')
 

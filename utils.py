@@ -6,7 +6,7 @@ import seaborn as sns
 import torch
 
 
-def train(model, train_loader, optimizer, loss_func, epoch, device):
+def train(model, train_loader, optimizer, loss_func, epoch, device, dir=False):
 
     """
     Trains and ERM classifier for an epoch and returns the train loss and train accuracy for that epoch
@@ -25,10 +25,17 @@ def train(model, train_loader, optimizer, loss_func, epoch, device):
         train_loss += loss
         train_acc += correct.sum()
 
+    ## get dirichlet energy
+    dir_energy = 0
+    if dir:
+        last_representation = model.ll_diffuse(img)
+        dirichlet_input = [ last_representation/np.linalg.norm(last_representation, ord='fro', axis=(-1,-2))[:,None,None] ]
+        dir_energy = get_similarities(dirichlet_input)[-1]
+
     train_loss /= len(train_loader.dataset)
     train_acc /= len(train_loader.dataset)
 
-    return train_loss, train_acc
+    return train_loss, train_acc, dir_energy
 
 def batch_dirichlet(X):
     bs = X.shape[0]
