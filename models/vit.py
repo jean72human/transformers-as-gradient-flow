@@ -399,3 +399,65 @@ class SimpleViT(nn.Module):
         x = self.transformer(x)
 
         return x.cpu().detach().numpy()
+    
+
+class SimpleViTED(nn.Module):
+    def __init__(self, *, image_size, patch_size, num_classes, dim, depth, heads, channels = 3, dim_head = 64, dropout = 0., method='A',tau=1, weight_norm=False):
+        super().__init__()
+        image_height, image_width = pair(image_size)
+        patch_height, patch_width = pair(patch_size)
+
+        assert image_height % patch_height == 0 and image_width % patch_width == 0, 'Image dimensions must be divisible by the patch size.'
+
+        num_patches = (image_height // patch_height) * (image_width // patch_width)
+        patch_dim = channels * patch_height * patch_width
+
+        self.to_patch_embedding = nn.Sequential(
+            Rearrange('b c (h p1) (w p2) -> b h w (p1 p2 c)', p1 = patch_height, p2 = patch_width),
+            nn.LayerNorm(patch_dim),
+            nn.Linear(patch_dim, dim),
+            nn.LayerNorm(dim),
+        )
+
+        self.grid = grid(image_height // patch_height,image_width // patch_width)
+
+        methods = {
+            'A':Transformer,
+            'FT':TransformerFT,
+            'D':TransformerD,
+            'BS':TransformerBS,
+            'PM':TransformerPM,
+            'PMS':TransformerPMS,
+            'PMK':TransformerPMK,
+            'SF':TransformerSF
+        }
+
+        self.transformer = methods[method](dim, depth, heads, dim_head, tau, dropout, weight_norm, grid=self.grid, patch_dims = (image_height // patch_height,image_width // patch_width))
+        self.decoder = nn.Sequential(
+            nn.LayerNorm(patch_dim),
+            nn.Linear(dim, num_classes * patch_height * patch_width),
+            Rearrange('b h w (p1 p2 c) -> b c (h p1) (w p2) ', p1 = patch_height, p2 = patch_width, c = num_classes),
+        )
+
+    def forward(self, img):
+        *_, h, w, dtype = *img.shape, img.dtype
+
+        x = self.to_patch_embedding(img)
+        pe = posemb_sincos_2d(x)
+        x = rearrange(x, 'b ... d -> b (...) d') + pe
+
+        x = self.transformer(x)
+        x = x.mean(dim = 1)
+
+        return self.decoder(x)
+    
+    def ll_diffuse(self,img):
+        *_, h, w, dtype = *img.shape, img.dtype
+
+        x = self.to_patch_embedding(img)
+        pe = posemb_sincos_2d(x)
+        x = rearrange(x, 'b ... d -> b (...) d') + pe
+
+        x = self.transformer(x)
+
+        return x.cpu().detach().numpy()
