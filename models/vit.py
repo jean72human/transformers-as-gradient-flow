@@ -32,9 +32,17 @@ def grid(m,n):
             if i > 0:
                 # connect to top neighbor
                 A[idx, idx - n] = 1
-            if i < n - 1:
+                if j > 0:  # top-left neighbor
+                    A[idx, idx - n - 1] = 1
+                if j < n - 1:  # top-right neighbor
+                    A[idx, idx - n + 1] = 1
+            if i < m - 1:
                 # connect to bottom neighbor
                 A[idx, idx + n] = 1
+                if j > 0:  # bottom-left neighbor
+                    A[idx, idx + n - 1] = 1
+                if j < n - 1:  # bottom-right neighbor
+                    A[idx, idx + n + 1] = 1
             if j > 0:
                 # connect to left neighbor
                 A[idx, idx - 1] = 1
@@ -44,6 +52,7 @@ def grid(m,n):
 
     A = A/A.sum(0)
     return A
+
 
 def tv_subtracted_term(X, lambda_, epsilon, A):
     """
@@ -217,6 +226,33 @@ class TransformerPM(nn.Module):
             x = self.tau*D*grad + x
         return x
     
+class TransformerPM2(nn.Module):
+    def __init__(self, dim, depth, heads, dim_head, tau=0.5, dropout = 0., weight_norm=True, **kwargs):
+        super().__init__()
+        self.layers = nn.ModuleList([])
+        self.tau = tau
+        self.grid = kwargs['grid']
+        for _ in range(depth):
+            self.layers.append(nn.ModuleList([
+                Attention(dim, heads = heads, dim_head = dim_head, dropout = dropout, weight_norm=weight_norm),
+                nn.utils.weight_norm(nn.Linear(dim, dim)) if weight_norm else nn.Linear(dim, dim)
+            ]))
+    def forward(self, x):
+        K=1
+        for attn, ff in self.layers:
+            grid = self.grid.to(x.device)[None,...].repeat(x.size(0),1,1)
+            spatial_grad = (x.transpose(-1,-2).unsqueeze(-1) - x.transpose(-1,-2).unsqueeze(-2)).mean(-3).squeeze()
+            spatial_grad = (grid*spatial_grad).unsqueeze(1)
+            D = torch.exp(-(spatial_grad**2) / (K**2))
+            grad = attn(x,diff=D)
+            x = self.tau*grad + x 
+            grad = ff(x)
+            spatial_grad = (x.transpose(-1,-2).unsqueeze(-1) - x.transpose(-1,-2).unsqueeze(-2)).mean(-3).squeeze()
+            spatial_grad = (grid*spatial_grad).unsqueeze(1)
+            D = torch.exp(-(spatial_grad**2) / (K**2))
+            x = self.tau*D@grad + x
+        return x
+    
 class TransformerSF(nn.Module):
     def __init__(self, dim, depth, heads, dim_head, tau=0.5, dropout = 0., weight_norm=True, **kwargs):
         super().__init__()
@@ -363,6 +399,7 @@ class SimpleViT(nn.Module):
             'D':TransformerD,
             'BS':TransformerBS,
             'PM':TransformerPM,
+            'PM2':TransformerPM2,
             'PMS':TransformerPMS,
             'PMK':TransformerPMK,
             'SF':TransformerSF
@@ -427,6 +464,7 @@ class SimpleViTED(nn.Module):
             'D':TransformerD,
             'BS':TransformerBS,
             'PM':TransformerPM,
+            'PM2':TransformerPM2,
             'PMS':TransformerPMS,
             'PMK':TransformerPMK,
             'SF':TransformerSF
