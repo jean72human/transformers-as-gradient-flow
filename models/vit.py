@@ -50,7 +50,7 @@ def grid(m,n):
                 # connect to right neighbor
                 A[idx, idx + 1] = 1
 
-    A = A/A.sum(0)
+    #A = A/A.sum(0)
     return A
 
 
@@ -120,7 +120,7 @@ class Attention(nn.Module):
         self.to_qkv = nn.ModuleList([nn.Linear(dim, inner_dim, bias = False) for _ in range(2)]+[nn.utils.weight_norm(nn.Linear(dim, inner_dim, bias = False)) if weight_norm else nn.Linear(dim, inner_dim, bias = False)])
         self.to_out = nn.Linear(inner_dim, dim, bias = False)
 
-    def forward(self, x, diff=1):
+    def forward(self, x, d=1):
         x = self.norm(x)
 
         qkv = [func(x) for func in self.to_qkv]
@@ -131,8 +131,9 @@ class Attention(nn.Module):
 
         attn = self.attend(dots)
         attn = self.dropout(attn)
+        attn = d*attn
 
-        out = torch.matmul(diff*attn, v)
+        out = torch.matmul(attn, v)
         out = rearrange(out, 'b h n d -> b n (h d)')
         return self.to_out(out)
 
@@ -232,25 +233,30 @@ class TransformerPM2(nn.Module):
         self.layers = nn.ModuleList([])
         self.tau = tau
         self.grid = kwargs['grid']
+        self.g = lambda x, K=0.5: torch.exp(-(x**2) / (K**2))
+        self.heads = heads
+        self.K = torch.nn.Parameter(torch.tensor([0.5]))
         for _ in range(depth):
             self.layers.append(nn.ModuleList([
                 Attention(dim, heads = heads, dim_head = dim_head, dropout = dropout, weight_norm=weight_norm),
                 nn.utils.weight_norm(nn.Linear(dim, dim)) if weight_norm else nn.Linear(dim, dim)
             ]))
+
+    def sg(self, x):
+        ex = rearrange(x, 'b n (h d) -> b h n d', h = self.heads)
+        D = torch.matmul(ex, ex.transpose(-1, -2)) / torch.norm(ex,dim=-1,keepdim=True)
+
+        D = torch.tanh(D/(self.K**2))
+
+        return D
+
     def forward(self, x):
-        K=1
         for attn, ff in self.layers:
-            grid = self.grid.to(x.device)[None,...].repeat(x.size(0),1,1)
-            spatial_grad = (x.transpose(-1,-2).unsqueeze(-1) - x.transpose(-1,-2).unsqueeze(-2)).mean(-3).squeeze()
-            spatial_grad = (grid*spatial_grad).unsqueeze(1)
-            D = torch.exp(-(spatial_grad**2) / (K**2))
-            grad = attn(x,diff=D)
+            grad = attn(x,d=self.sg(x))
             x = self.tau*grad + x 
+            
             grad = ff(x)
-            spatial_grad = (x.transpose(-1,-2).unsqueeze(-1) - x.transpose(-1,-2).unsqueeze(-2)).mean(-3).squeeze()
-            spatial_grad = (grid*spatial_grad).unsqueeze(1)
-            D = torch.exp(-(spatial_grad**2) / (K**2))
-            x = self.tau*D@grad + x
+            x = self.tau*grad + x
         return x
     
 class TransformerSF(nn.Module):

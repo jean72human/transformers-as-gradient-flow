@@ -16,7 +16,7 @@ import wandb
 import os
 
 augment = True
-batch_size = 1
+batch_size = 128
 num_epochs = 50
 size = 256
 patch_size = 32
@@ -24,7 +24,7 @@ depth = 32
 learning_rate = 2e-5
 dropout = 0.2
 device = 'cuda:1'
-log = False
+log = True
 train_path = './data/imagewoof2-320/train'
 val_path = './data/imagewoof2-320/val'
 valc_path = './data/imagewoof2-320/val_c'
