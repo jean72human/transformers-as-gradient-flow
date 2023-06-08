@@ -124,6 +124,7 @@ class AttentionPM(nn.Module):
         self.attn_drop = nn.Dropout(attn_drop)
         self.proj = nn.Linear(dim, dim)
         self.proj_drop = nn.Dropout(proj_drop)
+        self.K = torch.nn.Parameter(torch.tensor([0.5]))
 
     def forward(self, x):
         B, N, C = x.shape
@@ -136,8 +137,9 @@ class AttentionPM(nn.Module):
         attn = attn.softmax(dim=-1)
         attn = self.attn_drop(attn)
         ex = x.reshape(B, N, self.num_heads, self.head_dim).permute(0, 2, 1, 3)
+        ex = ex/torch.norm(ex,dim=-1,keepdim=True)
         D = ex @ ex.transpose(-2, -1)
-        D = torch.tanh(D / torch.norm(D,dim=-1,keepdim=True))
+        D = torch.tanh((D/self.K)**2)
         #D = torch.exp(-D/(0.5)**2).unsqueeze(-3).expand(B, self.num_heads, N, N)
         x = D*attn @ v
 
