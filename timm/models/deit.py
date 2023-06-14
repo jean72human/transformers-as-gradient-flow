@@ -18,12 +18,14 @@ from torch import nn as nn
 
 from timm.data import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD
 from timm.layers import resample_abs_pos_embed
-from timm.models.vision_transformer import VisionTransformer, trunc_normal_, checkpoint_filter_fn
+from timm.models.vision_transformer import VisionTransformer, BlockG2, BlockG3, BlockPM, BlockSheaf, trunc_normal_, checkpoint_filter_fn
 from ._builder import build_model_with_cfg
 from ._manipulate import checkpoint_seq
 from ._registry import generate_default_cfgs, register_model, register_model_deprecations
 
+
 __all__ = ['VisionTransformerDistilled']  # model_registry will add each entrypoint fn to this
+
 
 
 class VisionTransformerDistilled(VisionTransformer):
@@ -265,6 +267,42 @@ def deit_small_patch16_224(pretrained=False, **kwargs) -> VisionTransformer:
     ImageNet-1k weights from https://github.com/facebookresearch/deit.
     """
     model_args = dict(patch_size=16, embed_dim=384, depth=12, num_heads=6)
+    model = _create_deit('deit_small_patch16_224', pretrained=pretrained, **dict(model_args, **kwargs))
+    return model
+
+@register_model
+def deit_g2_patch16_224(pretrained=False, **kwargs) -> VisionTransformer:
+    """ DeiT base model @ 224x224 from paper (https://arxiv.org/abs/2012.12877).
+    ImageNet-1k weights from https://github.com/facebookresearch/deit.
+    """
+    model_args = dict(patch_size=16, embed_dim=384, depth=12, num_heads=6, block_fn=BlockG2)
+    model = _create_deit('deit_small_patch16_224', pretrained=pretrained, **dict(model_args, **kwargs))
+    return model
+
+@register_model
+def deit_g3_patch16_224(pretrained=False, **kwargs) -> VisionTransformer:
+    """ DeiT base model @ 224x224 from paper (https://arxiv.org/abs/2012.12877).
+    ImageNet-1k weights from https://github.com/facebookresearch/deit.
+    """
+    model_args = dict(patch_size=16, embed_dim=384, depth=12, num_heads=6, block_fn=BlockG3)
+    model = _create_deit('deit_small_patch16_224', pretrained=pretrained, **dict(model_args, **kwargs))
+    return model
+
+@register_model
+def deit_sheaf_patch16_224(pretrained=False, **kwargs) -> VisionTransformer:
+    """ DeiT base model @ 224x224 from paper (https://arxiv.org/abs/2012.12877).
+    ImageNet-1k weights from https://github.com/facebookresearch/deit.
+    """
+    model_args = dict(patch_size=16, embed_dim=384, depth=12, num_heads=6, block_fn=BlockSheaf)
+    model = _create_deit('deit_small_patch16_224', pretrained=pretrained, **dict(model_args, **kwargs))
+    return model
+
+@register_model
+def deit_pm_patch16_224(pretrained=False, **kwargs) -> VisionTransformer:
+    """ DeiT base model @ 224x224 from paper (https://arxiv.org/abs/2012.12877).
+    ImageNet-1k weights from https://github.com/facebookresearch/deit.
+    """
+    model_args = dict(patch_size=16, embed_dim=384, depth=12, num_heads=6, block_fn=BlockPM)
     model = _create_deit('deit_small_patch16_224', pretrained=pretrained, **dict(model_args, **kwargs))
     return model
 

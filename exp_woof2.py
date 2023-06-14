@@ -25,8 +25,8 @@ patch_size = 32
 depth = 32
 learning_rate = 1e-4
 dropout = 0.2
-device = 'cuda:0'
-log = True
+device = 'cuda:1'
+log = False
 train_path = './data/imagewoof2-320/train'
 val_path = './data/imagewoof2-320/val'
 valc_path = './data/imagewoof2-320/val_c'
@@ -78,7 +78,7 @@ valc_loader = torch.utils.data.DataLoader(valcset, batch_size=batch_size,
                                          shuffle=False, num_workers=4)
 
 
-ms = ['vit_pm_patch32_224']#,'vit_g_patch32_224','vit_base_patch32_224']
+ms = ['deit_g2_patch16_224']#,'deit_g2_patch16_224','deit_sheaf_patch16_224','deit_small_patch16_224','featscale_small_12','deit_g2_patch16_224']
 ss = [0]
 wns = [False]
 ts = [1]
@@ -105,7 +105,7 @@ for m,s,wn,t in zip(ms,ss,wns,ts):
                 "dropout":dropout
             }
         )
-    model = timm.create_model(m, pretrained=True)
+    model = timm.create_model(m, pretrained=False)
     
     model = model.to(device)
 

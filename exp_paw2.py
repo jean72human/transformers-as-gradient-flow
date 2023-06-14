@@ -44,10 +44,10 @@ train_loader = torch.utils.data.DataLoader(trainset, batch_size=batch_size,
 val_loader = torch.utils.data.DataLoader(valset, batch_size=batch_size,
                                          shuffle=False, num_workers=4)
 
-ms = ['vit_base_patch32_224','vit_pm_patch32_224']
-ss = [0,0]
-wns = [False,False]
-ts = [1,1]
+ms = ['deit_small_patch16_224','featscale_small_12','deit_g2_patch16_224']#,'vit_g_patch32_224','vit_base_patch32_224']
+ss = [0,0,0]
+wns = [False,False,False]
+ts = [1,1,1]
 ws = False
 
 if log:

@@ -66,6 +66,7 @@ from .vovnet import *
 from .xception import *
 from .xception_aligned import *
 from .xcit import *
+from .featscale import *
 
 from ._builder import build_model_with_cfg, load_pretrained, load_custom_pretrained, resolve_pretrained_cfg, \
     set_pretrained_download_progress, set_pretrained_check_hash
